@@ -1,0 +1,23 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+spring:
+  application:
+    name: microservice-provider-user
+  datasource:                           # 指定数据源
+    platform: mysql                        # 指定数据源类型
+    schema: classpath:schema.sql        # 指定数据库的建表脚本
+    data: classpath:data.sql            # 指定数据库的数据脚本
+logging:                                # 配置日志级别，让hibernate打印出执行的SQL
+  level:
+    root: INFO
+    org.hibernate: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
