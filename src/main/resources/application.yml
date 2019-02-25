@@ -10,14 +10,13 @@ eureka:
 
 spring:
   application:
-    name: microservice-provider-user
-  datasource:                           # 指定数据源
-    platform: mysql                        # 指定数据源类型
-    schema: classpath:schema.sql        # 指定数据库的建表脚本
-    data: classpath:data.sql            # 指定数据库的数据脚本
-logging:                                # 配置日志级别，让hibernate打印出执行的SQL
-  level:
-    root: INFO
-    org.hibernate: INFO
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
+    name: server_person
+  flyway:
+    baseline-on-migrate: true
+  datasource:
+    url: jdbc:mysql://119.29.75.134:3306/learn
+    username: vens
+    password: lzq520WW
+    driver-class-name: com.mysql.jdbc.Driver
+flyway:
+  locations: classpath:/db
