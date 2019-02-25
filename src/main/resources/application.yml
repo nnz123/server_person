@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8082
 
 eureka:
   client:
@@ -10,7 +10,7 @@ eureka:
 
 spring:
   application:
-    name: server_person
+    name: server-person
   flyway:
     baseline-on-migrate: true
   datasource:
