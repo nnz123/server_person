@@ -18,5 +18,7 @@ spring:
     username: vens
     password: lzq520WW
     driver-class-name: com.mysql.jdbc.Driver
+  jooq:
+    sql-dialect: mysql
 flyway:
   locations: classpath:/db
