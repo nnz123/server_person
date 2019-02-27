@@ -1,0 +1,1 @@
+alter table staff add `enabled` tinyint(1) NOT NULL DEFAULT '1'comment '默认启用';
