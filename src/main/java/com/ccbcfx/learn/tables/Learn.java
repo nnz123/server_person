@@ -4,15 +4,14 @@
 package com.ccbcfx.learn.tables;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+
+import javax.annotation.Generated;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -28,7 +27,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Learn extends SchemaImpl {
 
-    private static final long serialVersionUID = 1869129705;
+    private static final long serialVersionUID = 332824968;
 
     /**
      * The reference instance of <code>learn</code>
@@ -38,12 +37,12 @@ public class Learn extends SchemaImpl {
     /**
      * The table <code>learn.schema_version</code>.
      */
-    public final SchemaVersion SCHEMA_VERSION = com.ccbcfx.learn.tables.SchemaVersion.SCHEMA_VERSION;
+    public final SchemaVersion SCHEMA_VERSION = SchemaVersion.SCHEMA_VERSION;
 
     /**
      * The table <code>learn.staff</code>.
      */
-    public final Staff STAFF = com.ccbcfx.learn.tables.Staff.STAFF;
+    public final Staff STAFF = Staff.STAFF;
 
     /**
      * No further instances allowed

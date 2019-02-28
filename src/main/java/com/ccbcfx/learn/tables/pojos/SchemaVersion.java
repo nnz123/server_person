@@ -4,10 +4,9 @@
 package com.ccbcfx.learn.tables.pojos;
 
 
+import javax.annotation.Generated;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import javax.annotation.Generated;
 
 
 /**
@@ -23,7 +22,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SchemaVersion implements Serializable {
 
-    private static final long serialVersionUID = 866693732;
+    private static final long serialVersionUID = -1695502653;
 
     private Integer       versionRank;
     private Integer       installedRank;

@@ -1,0 +1,1 @@
+alter table staff modify `enabled` boolean NOT NULL DEFAULT '1'comment '默认启用';

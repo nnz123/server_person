@@ -4,12 +4,11 @@
 package com.ccbcfx.learn.tables.pojos;
 
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import org.jooq.types.UInteger;
 
 import javax.annotation.Generated;
-
-import org.jooq.types.UInteger;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 /**
@@ -25,7 +24,7 @@ import org.jooq.types.UInteger;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Staff implements Serializable {
 
-    private static final long serialVersionUID = -1601918782;
+    private static final long serialVersionUID = -376295928;
 
     private UInteger      id;
     private String        name;
@@ -42,6 +41,7 @@ public class Staff implements Serializable {
     private LocalDateTime updateAt;
     private String        deleteBy;
     private LocalDateTime deleteAt;
+    private Byte          enabled;
 
     public Staff() {}
 
@@ -61,6 +61,7 @@ public class Staff implements Serializable {
         this.updateAt = value.updateAt;
         this.deleteBy = value.deleteBy;
         this.deleteAt = value.deleteAt;
+        this.enabled = value.enabled;
     }
 
     public Staff(
@@ -78,7 +79,8 @@ public class Staff implements Serializable {
         String        updateBy,
         LocalDateTime updateAt,
         String        deleteBy,
-        LocalDateTime deleteAt
+        LocalDateTime deleteAt,
+        Byte          enabled
     ) {
         this.id = id;
         this.name = name;
@@ -95,6 +97,7 @@ public class Staff implements Serializable {
         this.updateAt = updateAt;
         this.deleteBy = deleteBy;
         this.deleteAt = deleteAt;
+        this.enabled = enabled;
     }
 
     public UInteger getId() {
@@ -217,6 +220,14 @@ public class Staff implements Serializable {
         this.deleteAt = deleteAt;
     }
 
+    public Byte getEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(Byte enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Staff (");
@@ -236,6 +247,7 @@ public class Staff implements Serializable {
         sb.append(", ").append(updateAt);
         sb.append(", ").append(deleteBy);
         sb.append(", ").append(deleteAt);
+        sb.append(", ").append(enabled);
 
         sb.append(")");
         return sb.toString();

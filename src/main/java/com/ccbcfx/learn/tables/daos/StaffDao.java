@@ -66,6 +66,18 @@ public class StaffDao {
     }
 
     /**
+     * 根据主键查询头像路径
+     *
+     * @param id
+     * @return
+     */
+    public String findImgUrlById(UInteger id) {
+        Record1<String> result = dslContext.select(STAFF.IMG_URL).from(STAFF).where(STAFF.ID.eq(id)).fetchAny();
+        return result.get(STAFF.IMG_URL);
+    }
+
+
+    /**
      * 查询所有数据
      *
      * @return
@@ -148,6 +160,6 @@ public class StaffDao {
      * @return
      */
     public boolean delete(int id) {
-        return dslContext.delete(STAFF).where(STAFF.ID.eq(UInteger.valueOf(id))).execute() > 0 ? true : false;
+        return dslContext.update(STAFF).set(STAFF.ENABLED,(byte)0).where(STAFF.ID.eq(UInteger.valueOf(id))).execute()> 0 ? true : false;
     }
 }

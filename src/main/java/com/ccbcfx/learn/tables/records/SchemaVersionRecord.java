@@ -5,16 +5,14 @@ package com.ccbcfx.learn.tables.records;
 
 
 import com.ccbcfx.learn.tables.SchemaVersion;
-
-import java.time.LocalDateTime;
-
-import javax.annotation.Generated;
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
+
+import javax.annotation.Generated;
+import java.time.LocalDateTime;
 
 
 /**
@@ -30,7 +28,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord> implements Record11<Integer, Integer, String, String, String, String, Integer, String, LocalDateTime, Integer, Byte> {
 
-    private static final long serialVersionUID = -1832422749;
+    private static final long serialVersionUID = -332240283;
 
     /**
      * Setter for <code>learn.schema_version.version_rank</code>.

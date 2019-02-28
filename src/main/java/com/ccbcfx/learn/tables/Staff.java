@@ -5,21 +5,14 @@ package com.ccbcfx.learn.tables;
 
 
 import com.ccbcfx.learn.tables.records.StaffRecord;
+import org.jooq.*;
+import org.jooq.impl.TableImpl;
+import org.jooq.types.UInteger;
 
+import javax.annotation.Generated;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.Generated;
-
-import org.jooq.Field;
-import org.jooq.Identity;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UniqueKey;
-import org.jooq.impl.TableImpl;
-import org.jooq.types.UInteger;
 
 
 /**
@@ -35,7 +28,7 @@ import org.jooq.types.UInteger;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Staff extends TableImpl<StaffRecord> {
 
-    private static final long serialVersionUID = -763636022;
+    private static final long serialVersionUID = 1322959343;
 
     /**
      * The reference instance of <code>learn.staff</code>
@@ -124,6 +117,11 @@ public class Staff extends TableImpl<StaffRecord> {
      * The column <code>learn.staff.delete_at</code>.
      */
     public final TableField<StaffRecord, LocalDateTime> DELETE_AT = createField("delete_at", org.jooq.impl.SQLDataType.LOCALDATETIME.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.LOCALDATETIME)), this, "");
+
+    /**
+     * The column <code>learn.staff.enabled</code>. 默认启用
+     */
+    public final TableField<StaffRecord, Byte> ENABLED = createField("enabled", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.TINYINT)), this, "默认启用");
 
     /**
      * Create a <code>learn.staff</code> table reference

@@ -6,14 +6,12 @@ package com.ccbcfx.learn.tables.daos;
 
 import com.ccbcfx.learn.tables.SchemaVersion;
 import com.ccbcfx.learn.tables.records.SchemaVersionRecord;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.annotation.Generated;
-
 import org.jooq.Configuration;
 import org.jooq.impl.DAOImpl;
+
+import javax.annotation.Generated;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**

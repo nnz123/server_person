@@ -135,7 +135,7 @@
                         </generate>
 
                         <target>
-                            <packageName>com.ccbcfx.learn</packageName>
+                            <packageName>com.ccbcsf.learn</packageName>
                             <directory>src/main/java</directory>
                         </target>
                     </generator>

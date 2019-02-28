@@ -4,17 +4,14 @@
 package com.ccbcfx.learn.tables;
 
 
-import com.ccbcfx.learn.tables.SchemaVersion;
-import com.ccbcfx.learn.tables.Staff;
 import com.ccbcfx.learn.tables.records.SchemaVersionRecord;
 import com.ccbcfx.learn.tables.records.StaffRecord;
-
-import javax.annotation.Generated;
-
 import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
 import org.jooq.types.UInteger;
+
+import javax.annotation.Generated;
 
 
 /**

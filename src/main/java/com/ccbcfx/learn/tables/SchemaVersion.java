@@ -5,19 +5,13 @@ package com.ccbcfx.learn.tables;
 
 
 import com.ccbcfx.learn.tables.records.SchemaVersionRecord;
+import org.jooq.*;
+import org.jooq.impl.TableImpl;
 
+import javax.annotation.Generated;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.Generated;
-
-import org.jooq.Field;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UniqueKey;
-import org.jooq.impl.TableImpl;
 
 
 /**
@@ -33,7 +27,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SchemaVersion extends TableImpl<SchemaVersionRecord> {
 
-    private static final long serialVersionUID = -423180867;
+    private static final long serialVersionUID = -1668503525;
 
     /**
      * The reference instance of <code>learn.schema_version</code>

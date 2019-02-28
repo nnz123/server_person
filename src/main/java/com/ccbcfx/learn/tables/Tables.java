@@ -4,9 +4,6 @@
 package com.ccbcfx.learn.tables;
 
 
-
-
-
 import javax.annotation.Generated;
 
 
@@ -26,10 +23,10 @@ public class Tables {
     /**
      * The table <code>learn.schema_version</code>.
      */
-    public static final SchemaVersion SCHEMA_VERSION = com.ccbcfx.learn.tables.SchemaVersion.SCHEMA_VERSION;
+    public static final SchemaVersion SCHEMA_VERSION = SchemaVersion.SCHEMA_VERSION;
 
     /**
      * The table <code>learn.staff</code>.
      */
-    public static final Staff STAFF = com.ccbcfx.learn.tables.Staff.STAFF;
+    public static final Staff STAFF = Staff.STAFF;
 }
