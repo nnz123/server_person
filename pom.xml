@@ -15,10 +15,6 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
@@ -122,9 +118,28 @@
                     <generator>
                         <database>
                             <name>org.jooq.util.mysql.MySQLDatabase</name>
-
                             <includes>.*</includes>
                             <inputSchema>learn</inputSchema>
+                            <forcedTypes>
+                                <forcedType>
+                                    <userType>com.ccbcfx.learn.enums.GenderType</userType>
+                                    <converter>com.ccbcfx.learn.tables.converter.GenderTypeConverter</converter>
+                                    <expression>.*\.GENDER</expression>
+                                    <types>.*</types>
+                                </forcedType>
+                                <forcedType>
+                                    <userType>com.ccbcfx.learn.enums.StaffStatusType</userType>
+                                    <converter>com.ccbcfx.learn.tables.converter.StaffStatusTypeConverter</converter>
+                                    <expression>.*\.STATUS</expression>
+                                    <types>.*</types>
+                                </forcedType>
+                                <forcedType>
+                                    <userType>com.ccbcfx.learn.enums.DocumentType</userType>
+                                    <converter>com.ccbcfx.learn.tables.converter.DocumentTypeConverter</converter>
+                                    <expression>.*\.DOCUMENT_TYPE</expression>
+                                    <types>.*</types>
+                                </forcedType>
+                            </forcedTypes>
                         </database>
 
                         <generate>
