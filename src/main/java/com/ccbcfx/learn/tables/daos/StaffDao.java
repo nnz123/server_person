@@ -3,8 +3,11 @@ package com.ccbcfx.learn.tables.daos;
 
 
 import com.ccbcfx.learn.tables.pojos.Staff;
+import com.ccbcfx.learn.tables.records.StaffRecord;
 import org.jooq.*;
 import org.jooq.types.UInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +20,8 @@ import static com.ccbcfx.learn.tables.Staff.STAFF;
 
 @Component
 public class StaffDao {
+    private static final Logger logger = LoggerFactory.getLogger(StaffDao.class);
+
     @Autowired
     DSLContext dslContext;
 
@@ -30,6 +35,7 @@ public class StaffDao {
         int res = dslContext.insertInto(STAFF)
                 .set(STAFF.NAME, staff.getName())
                 .set(STAFF.GENDER, staff.getGender())
+                .set(STAFF.BIRTHDAY, staff.getBirthday())
                 .set(STAFF.STATUS, staff.getStatus())
                 .set(STAFF.DOCUMENT_TYPE, staff.getDocumentType())
                 .set(STAFF.DOCUMENT_NUMBER, staff.getDocumentNumber())
@@ -126,26 +132,31 @@ public class StaffDao {
      * @param id
      * @return
      */
-    public int update(Map<TableField, Object> params, UInteger id) {
+    public Staff update(Map<TableField, Object> params, UInteger id) {
         UpdateQuery updateQuery = dslContext.updateQuery(STAFF);
-        for (TableField field : params.keySet()) {
-            updateQuery.addValue(field, params.get(field));
-        }
-        return updateQuery.execute();
+        updateQuery.addValues(params);
+        updateQuery.setReturning();
+        updateQuery.addConditions(STAFF.ID.eq(id));
+        updateQuery.execute();
+        StaffRecord record = (StaffRecord)updateQuery.getReturnedRecord();
+        return record.into(Staff.class);
     }
 
     /**
      * 根据查询条件获取数据
      *
      * @param conditions
+     * @param offset
+     * @param size
      * @return
      */
-    public List<Staff> findStaffByConditions(Condition[] conditions) {
+    public List<Staff> findStaffByConditions(Condition[] conditions, int offset, int size) {
         List staffs = new ArrayList<Staff>();
         SelectQuery selectQuery = dslContext.selectQuery();
         selectQuery.addSelect(STAFF.ID);
-        selectQuery.addConditions(conditions);
         selectQuery.addFrom(STAFF);
+        selectQuery.addConditions(conditions);
+        selectQuery.addLimit(offset, size);
         Result<Record1<UInteger>> records = selectQuery.fetch();
         for (Record1<UInteger> record : records) {
             staffs.add(findById(record.getValue(STAFF.ID)));
@@ -160,6 +171,6 @@ public class StaffDao {
      * @return
      */
     public boolean delete(int id) {
-        return dslContext.update(STAFF).set(STAFF.ENABLED,(byte)0).where(STAFF.ID.eq(UInteger.valueOf(id))).execute()> 0 ? true : false;
+        return dslContext.update(STAFF).set(STAFF.ENABLED, (byte) 0).where(STAFF.ID.eq(UInteger.valueOf(id))).execute() > 0 ? true : false;
     }
 }

@@ -6,6 +6,7 @@ import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
+import org.jooq.types.UInteger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +22,7 @@ public class OrikaConfig {
         mapperFactory.getConverterFactory().registerConverter(new LocalDateConverter());
         mapperFactory.getConverterFactory().registerConverter(new LocalDateTimeConverter());
         mapperFactory.getConverterFactory().registerConverter(new LocalTimeConverter());
+        mapperFactory.getConverterFactory().registerConverter(new UIntegerConverter());
         mapperFactory.classMap(StaffDto.class, Staff.class)
                 .byDefault()
                 .register();
@@ -58,6 +60,16 @@ public class OrikaConfig {
         @Override
         public LocalTime convertFrom(LocalTime source, Type<LocalTime> destinationType) {
             return LocalTime.from(source);
+        }
+    }
+    private class UIntegerConverter extends BidirectionalConverter<UInteger, Integer> {
+        @Override
+        public Integer convertTo(UInteger source, Type<Integer> destinationType) {
+            return source.intValue();
+        }
+        @Override
+        public UInteger convertFrom(Integer source, Type<UInteger> destinationType) {
+            return UInteger.valueOf(source);
         }
     }
 }

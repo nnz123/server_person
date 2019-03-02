@@ -24,9 +24,9 @@ public class StaffController {
         return staffService.findAll();
     }
 
-    @PostMapping(path = "/staff/list")
+    @PostMapping(path = "/staff/search")
     List<StaffDto> getStaffs(@RequestBody ConditionsDto conditionsDto, @RequestParam int offset, @RequestParam int size){
-        return null;
+        return staffService.findByConditions(conditionsDto,offset,size);
     }
 
     @GetMapping(path = "/staff/profile/{id}")
@@ -37,6 +37,19 @@ public class StaffController {
     @DeleteMapping(path = "/staff/{id}")
     public boolean delete(@PathVariable(value = "id") int id){
         return staffService.delete(id);
+    }
+
+    /**
+     * 更新对象
+     *
+     * @param id
+     * @param staffDto
+     * @return
+     */
+    @PutMapping(path = "/Staff/{id}")
+    StaffDto updateStaff(@PathVariable(value = "id") int id,
+                         @RequestBody StaffDto staffDto){
+        return staffService.updateStaff(id,staffDto);
     }
 
 }

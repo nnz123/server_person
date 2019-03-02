@@ -21,9 +21,10 @@ public interface StaffService {
 
     List<StaffDto> findAll();
 
-    List<StaffDto> findByConditions(ConditionsDto conditionsDto,int offset,int size) throws NoSuchFieldException, IllegalAccessException;
+    List<StaffDto> findByConditions(ConditionsDto conditionsDto,int offset,int size);
 
     boolean delete(int id);
 
+    StaffDto updateStaff(int id,StaffDto staffDto);
 
 }
