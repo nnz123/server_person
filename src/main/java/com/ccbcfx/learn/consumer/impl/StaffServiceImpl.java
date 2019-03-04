@@ -1,8 +1,11 @@
-package com.ccbcfx.learn.service.impl;
+package com.ccbcfx.learn.consumer.impl;
 
+import com.ccbcfx.learn.enums.StaffStatusType;
+import com.ccbcfx.learn.message.StaffLeaveMessage;
+import com.ccbcfx.learn.mq.PersonSender;
 import com.ccbcfx.learn.remote.dto.ConditionsDto;
 import com.ccbcfx.learn.remote.dto.StaffDto;
-import com.ccbcfx.learn.service.StaffService;
+import com.ccbcfx.learn.consumer.StaffService;
 import com.ccbcfx.learn.tables.daos.StaffDao;
 import com.ccbcfx.learn.tables.pojos.Staff;
 
@@ -15,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static com.ccbcfx.learn.tables.Staff.STAFF;
 
@@ -28,6 +31,8 @@ public class StaffServiceImpl implements StaffService {
     MapperFactory mapperFactory;
     @Autowired
     StaffDao staffDao;
+    @Autowired
+    PersonSender personSender;
 
     @Override
     public int createStaff(StaffDto staffDto) {
@@ -36,10 +41,40 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public List<StaffDto> findAll() {
-        List<StaffDto> staffDtos = new ArrayList<>();
-        List<Staff> staffs = staffDao.findAll();
+    public boolean delete(int id, int deleteBy) {
+        return staffDao.delete(id, deleteBy);
+    }
 
+    @Override
+    public boolean leave(int id, String name, Date leaveTime, String leaveReason) {
+        boolean result = staffDao.updateStatus(UInteger.valueOf(id), StaffStatusType.leave);
+        personSender.send(new StaffLeaveMessage(id,name,new Date(),leaveReason));
+        return result;
+    }
+
+    @Override
+    public StaffDto updateStaff(int id, StaffDto staffDto) {
+        Staff staff = mapperFactory.getMapperFacade().map(staffDto, Staff.class);
+        return mapperFactory.getMapperFacade().map(staffDao.updateWithReturn(staff, UInteger.valueOf(id)), StaffDto.class);
+    }
+
+
+    @Override
+    public boolean updatePortrait(int id, String imgUrl) {
+        return staffDao.updateImgUrl(id, imgUrl);
+    }
+
+    @Override
+    public StaffDto findOne(int id) {
+        Staff staff = staffDao.findById(UInteger.valueOf(id));
+        StaffDto staffDto = mapperFactory.getMapperFacade().map(staff, StaffDto.class);
+        return staffDto;
+    }
+
+    @Override
+    public List<StaffDto> findAll(int offset, int size) {
+        List<StaffDto> staffDtos = new ArrayList<>();
+        List<Staff> staffs = staffDao.findAll(offset, size);
         for (Staff staff : staffs) {
             StaffDto staffDto = mapperFactory.getMapperFacade().map(staff, StaffDto.class);
             staffDtos.add(staffDto);
@@ -102,55 +137,4 @@ public class StaffServiceImpl implements StaffService {
     }
 
 
-    @Override
-    public StaffDto findOne(int id) {
-        Staff staff = staffDao.findById(UInteger.valueOf(id));
-        StaffDto staffDto = mapperFactory.getMapperFacade().map(staff, StaffDto.class);
-        return staffDto;
-    }
-
-    @Override
-    public String findProfilePath(int id) {
-        return staffDao.findImgUrlById(UInteger.valueOf(id));
-    }
-
-    @Override
-    public boolean delete(int id) {
-        return staffDao.delete(id);
-    }
-
-    @Override
-    public StaffDto updateStaff(int id,StaffDto staffDto) {
-        Map<TableField, Object> params
-                = new HashMap<>(6);
-        if (null != staffDto.getGender()) {
-            params.put(STAFF.GENDER,
-                    staffDto.getGender());
-        }
-        if (null != staffDto.getBirthday()) {
-            params.put(STAFF.BIRTHDAY,
-                    staffDto.getBirthday());
-        }
-        if (null != staffDto.getDocumentType()) {
-            params.put(STAFF.DOCUMENT_TYPE,
-                    staffDto.getDocumentType());
-        }
-        if (null != staffDto.getPhone()
-                && "".equals(staffDto.getPhone())) {
-            params.put(STAFF.PHONE,
-                    staffDto.getPhone());
-        }
-        if (null != staffDto.getName()
-                && "".equals(staffDto.getName())) {
-            params.put(STAFF.NAME, staffDto.getName());
-        }
-        if (null != staffDto.getDocumentNumber()
-                && "".equals(staffDto.getDocumentNumber())) {
-            params.put(STAFF.DOCUMENT_NUMBER,
-                    staffDto.getDocumentNumber());
-        }
-        Staff staff = staffDao.update(params, UInteger.valueOf(id));
-
-        return mapperFactory.getMapperFacade().map(staff, StaffDto.class);
-    }
 }

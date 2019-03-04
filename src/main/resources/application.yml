@@ -20,14 +20,15 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jooq:
     sql-dialect: mysql
-#  rabbitmq:
-#    host: 119.29.75.134
-#    port: 5672
-#    username: admin
-#    password: 123456
-#    listener:
-#      simple:
-#        acknowledge-mode: manual
+  rabbitmq:
+    host: 119.29.75.134
+    port: 5672
+    username: admin
+    password: 123456
+    publisher-confirms: true
+    publisher-returns: true
+    template:
+        mandatory: true
 flyway:
   locations: classpath:/db
 logging:
