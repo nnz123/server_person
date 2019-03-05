@@ -1,6 +1,6 @@
 package com.ccbcfx.learn.configs;
 
-import com.ccbcfx.learn.remote.dto.StaffDto;
+import com.ccbcfx.learn.remote.dto.StaffDTO;
 import com.ccbcfx.learn.tables.pojos.Staff;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.BidirectionalConverter;
@@ -23,10 +23,10 @@ public class OrikaConfig {
         mapperFactory.getConverterFactory().registerConverter(new LocalDateTimeConverter());
         mapperFactory.getConverterFactory().registerConverter(new LocalTimeConverter());
         mapperFactory.getConverterFactory().registerConverter(new UIntegerConverter());
-        mapperFactory.classMap(StaffDto.class, Staff.class)
+        mapperFactory.classMap(StaffDTO.class, Staff.class)
                 .byDefault()
                 .register();
-        mapperFactory.classMap(Staff.class,StaffDto.class)
+        mapperFactory.classMap(Staff.class, StaffDTO.class)
                 .byDefault()
                 .register();
         return mapperFactory;

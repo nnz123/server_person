@@ -1,14 +1,16 @@
-package com.ccbcfx.learn.consumer.impl;
+package com.ccbcfx.learn.service.impl;
 
 import com.ccbcfx.learn.enums.StaffStatusType;
 import com.ccbcfx.learn.message.StaffLeaveMessage;
 import com.ccbcfx.learn.mq.PersonSender;
-import com.ccbcfx.learn.remote.dto.ConditionsDto;
-import com.ccbcfx.learn.remote.dto.StaffDto;
-import com.ccbcfx.learn.consumer.StaffService;
+import com.ccbcfx.learn.remote.dto.ConditionsDTO;
+import com.ccbcfx.learn.remote.dto.PageStaffDTO;
+import com.ccbcfx.learn.remote.dto.StaffDTO;
+import com.ccbcfx.learn.service.StaffService;
 import com.ccbcfx.learn.tables.daos.StaffDao;
 import com.ccbcfx.learn.tables.pojos.Staff;
 
+import com.ccbcfx.learn.tables.records.StaffRecord;
 import com.ccbcfx.learn.util.StringUtil;
 import ma.glasnost.orika.MapperFactory;
 import org.jooq.Condition;
@@ -18,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.ccbcfx.learn.tables.Staff.STAFF;
 
@@ -35,7 +34,7 @@ public class StaffServiceImpl implements StaffService {
     PersonSender personSender;
 
     @Override
-    public int createStaff(StaffDto staffDto) {
+    public int createStaff(StaffDTO staffDto) {
         Staff staff = mapperFactory.getMapperFacade().map(staffDto, Staff.class);
         return staffDao.addStaff(staff);
     }
@@ -48,14 +47,43 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public boolean leave(int id, String name, Date leaveTime, String leaveReason) {
         boolean result = staffDao.updateStatus(UInteger.valueOf(id), StaffStatusType.leave);
-        personSender.send(new StaffLeaveMessage(id,name,new Date(),leaveReason));
+        personSender.send(new StaffLeaveMessage(id, name, new Date(), leaveReason));
         return result;
     }
 
     @Override
-    public StaffDto updateStaff(int id, StaffDto staffDto) {
-        Staff staff = mapperFactory.getMapperFacade().map(staffDto, Staff.class);
-        return mapperFactory.getMapperFacade().map(staffDao.updateWithReturn(staff, UInteger.valueOf(id)), StaffDto.class);
+    public boolean updateStaff(int id, StaffDTO staffDto) {
+        Map<TableField<StaffRecord, ?>, Object> params = new HashMap<>(8);
+        if (null != staffDto.getBirthday()) {
+            params.put(STAFF.BIRTHDAY,
+                    staffDto.getBirthday());
+        }
+        if (null != staffDto.getDocumentType()) {
+            params.put(STAFF.DOCUMENT_TYPE,
+                    staffDto.getDocumentType());
+        }
+        if (null != staffDto.getGender()) {
+            params.put(STAFF.GENDER,
+                    staffDto.getGender());
+        }
+        if (null != staffDto.getName()
+                && !"".equals(staffDto.getName())) {
+            params.put(STAFF.NAME,
+                    staffDto.getName());
+        }
+        if (null != staffDto.getDocumentNumber()
+                && !"".equals(staffDto.getDocumentNumber())) {
+            params.put(STAFF.DOCUMENT_NUMBER,
+                    staffDto.getDocumentNumber());
+        }
+        if (null != staffDto.getPhone()
+                && !"".equals(staffDto.getPhone())) {
+            params.put(STAFF.PHONE,
+                    staffDto.getPhone());
+        }
+        params.put(STAFF.UPDATE_BY, staffDto.getUpdateBy());
+        params.put(STAFF.UPDATE_AT, staffDto.getUpdateAt());
+        return staffDao.update(params, UInteger.valueOf(id));
     }
 
 
@@ -65,25 +93,16 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public StaffDto findOne(int id) {
+    public StaffDTO findOne(int id) {
         Staff staff = staffDao.findById(UInteger.valueOf(id));
-        StaffDto staffDto = mapperFactory.getMapperFacade().map(staff, StaffDto.class);
+        StaffDTO staffDto = mapperFactory.getMapperFacade().map(staff, StaffDTO.class);
         return staffDto;
     }
 
-    @Override
-    public List<StaffDto> findAll(int offset, int size) {
-        List<StaffDto> staffDtos = new ArrayList<>();
-        List<Staff> staffs = staffDao.findAll(offset, size);
-        for (Staff staff : staffs) {
-            StaffDto staffDto = mapperFactory.getMapperFacade().map(staff, StaffDto.class);
-            staffDtos.add(staffDto);
-        }
-        return staffDtos;
-    }
 
     @Override
-    public List<StaffDto> findByConditions(ConditionsDto conditionsDto, int offset, int size) {
+    public PageStaffDTO findByConditions(ConditionsDTO conditionsDto, int offset, int size) {
+        PageStaffDTO pageStaffDTO = new PageStaffDTO();
         List<Condition> conditions = new ArrayList<>();
         try {
             conditions = createConditions(conditionsDto);
@@ -92,12 +111,23 @@ public class StaffServiceImpl implements StaffService {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
-        List<Staff> staffList =
-                staffDao.findStaffByConditions(
-                        conditions.toArray(new Condition[conditions.size()]),
-                        offset,
-                        size);
-        return mapperFactory.getMapperFacade().mapAsList(staffList, StaffDto.class);
+        List<Staff> staffList = staffDao.findStaffByConditions(offset, size, conditions.toArray(new Condition[conditions.size()]));
+        List<StaffDTO> staffDtoList = mapperFactory.getMapperFacade().mapAsList(staffList, StaffDTO.class);
+        int count = staffDao.count(conditions);
+        pageStaffDTO.setTotal(count);
+        pageStaffDTO.setStaffDtoList(staffDtoList);
+        return pageStaffDTO;
+    }
+
+    @Override
+    public PageStaffDTO getStaffList(int offset, int size) {
+        List<Staff> staffList = staffDao.findAll(offset, size);
+        List<StaffDTO> staffDtoList = mapperFactory.getMapperFacade().mapAsList(staffList, StaffDTO.class);
+        int count = staffDao.count(Arrays.asList(STAFF.ENABLED.eq((byte) 1)));
+        PageStaffDTO pageStaffDTO = new PageStaffDTO();
+        pageStaffDTO.setTotal(count);
+        pageStaffDTO.setStaffDtoList(staffDtoList);
+        return pageStaffDTO;
     }
 
     /**
@@ -108,9 +138,9 @@ public class StaffServiceImpl implements StaffService {
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
      */
-    private List<Condition> createConditions(ConditionsDto conditionsDto) throws IllegalAccessException, NoSuchFieldException {
+    private List<Condition> createConditions(ConditionsDTO conditionsDto) throws IllegalAccessException, NoSuchFieldException {
         List<Condition> conditions = new ArrayList<>();
-        Field[] fields = ConditionsDto.class.getDeclaredFields();
+        Field[] fields = ConditionsDTO.class.getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
             if (null == field.get(conditionsDto)) {

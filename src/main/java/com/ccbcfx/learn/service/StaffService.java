@@ -1,12 +1,11 @@
-package com.ccbcfx.learn.consumer;
+package com.ccbcfx.learn.service;
 
 
-import com.ccbcfx.learn.remote.dto.ConditionsDto;
-import com.ccbcfx.learn.remote.dto.StaffDto;
+import com.ccbcfx.learn.remote.dto.ConditionsDTO;
+import com.ccbcfx.learn.remote.dto.PageStaffDTO;
+import com.ccbcfx.learn.remote.dto.StaffDTO;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 
 public interface StaffService {
@@ -17,7 +16,7 @@ public interface StaffService {
      * @param staff
      * @return
      */
-    int createStaff(StaffDto staff);
+    int createStaff(StaffDTO staff);
 
     /**
      * 通过id查询员工
@@ -25,16 +24,8 @@ public interface StaffService {
      * @param id
      * @return
      */
-    StaffDto findOne(int id);
+    StaffDTO findOne(int id);
 
-    /**
-     * 查询员工
-     *
-     * @param offset
-     * @param size
-     * @return
-     */
-    List<StaffDto> findAll(int offset, int size);
 
     /**
      * 通过条件查询员工
@@ -44,7 +35,7 @@ public interface StaffService {
      * @param size
      * @return
      */
-    List<StaffDto> findByConditions(ConditionsDto conditionsDto, int offset, int size);
+    PageStaffDTO findByConditions(ConditionsDTO conditionsDto, int offset, int size);
 
     /**
      * 删除员工
@@ -73,7 +64,7 @@ public interface StaffService {
      * @param staffDto
      * @return
      */
-    StaffDto updateStaff(int id, StaffDto staffDto);
+    boolean updateStaff(int id, StaffDTO staffDto);
 
     /**
      * 上传员工头像
@@ -83,5 +74,15 @@ public interface StaffService {
      * @return
      */
     boolean updatePortrait(int id, String imgUrl);
+
+    /**
+     * 批量查询员工
+     *
+     * @param offset
+     * @param size
+     * @return
+     */
+    PageStaffDTO getStaffList(int offset, int size);
+
 
 }
