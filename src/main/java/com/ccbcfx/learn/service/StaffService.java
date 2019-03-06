@@ -8,6 +8,11 @@ import com.ccbcfx.learn.remote.dto.StaffDTO;
 import java.util.Date;
 
 
+/**
+ * @Description:
+ * @Author: 陆志庆
+ * @CreateDate: 2019/3/1 14:02
+ */
 public interface StaffService {
 
     /**
@@ -35,7 +40,7 @@ public interface StaffService {
      * @param size
      * @return
      */
-    PageStaffDTO findByConditions(ConditionsDTO conditionsDto, int offset, int size);
+    PageStaffDTO findByConditions(int offset, int size,ConditionsDTO conditionsDto);
 
     /**
      * 删除员工

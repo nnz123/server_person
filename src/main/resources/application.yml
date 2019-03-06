@@ -29,6 +29,12 @@ spring:
     publisher-returns: true
     template:
         mandatory: true
+  redis:
+    database: 0
+    password: 7416kobe
+    host: 119.29.75.134
+    port: 6379
+    timeout: 2000
 flyway:
   locations: classpath:/db
 logging:

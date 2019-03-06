@@ -11,8 +11,8 @@ import com.ccbcfx.learn.tables.daos.StaffDao;
 import com.ccbcfx.learn.tables.pojos.Staff;
 
 import com.ccbcfx.learn.tables.records.StaffRecord;
+import com.ccbcfx.learn.util.BeanUtil;
 import com.ccbcfx.learn.util.StringUtil;
-import ma.glasnost.orika.MapperFactory;
 import org.jooq.Condition;
 import org.jooq.TableField;
 import org.jooq.types.UInteger;
@@ -24,24 +24,27 @@ import java.util.*;
 
 import static com.ccbcfx.learn.tables.Staff.STAFF;
 
+/**
+ * @Description:
+ * @Author: 陆志庆
+ * @CreateDate: 2019/3/1 14:02
+ */
 @Service
 public class StaffServiceImpl implements StaffService {
     @Autowired
-    MapperFactory mapperFactory;
+    private StaffDao staffDao;
     @Autowired
-    StaffDao staffDao;
-    @Autowired
-    PersonSender personSender;
+    private PersonSender personSender;
 
     @Override
     public int createStaff(StaffDTO staffDto) {
-        Staff staff = mapperFactory.getMapperFacade().map(staffDto, Staff.class);
+        Staff staff = BeanUtil.map(staffDto, Staff.class);
         return staffDao.addStaff(staff);
     }
 
     @Override
     public boolean delete(int id, int deleteBy) {
-        return staffDao.delete(id, deleteBy);
+        return staffDao.delete(UInteger.valueOf(id), deleteBy);
     }
 
     @Override
@@ -83,26 +86,27 @@ public class StaffServiceImpl implements StaffService {
         }
         params.put(STAFF.UPDATE_BY, staffDto.getUpdateBy());
         params.put(STAFF.UPDATE_AT, staffDto.getUpdateAt());
-        return staffDao.update(params, UInteger.valueOf(id));
+        return staffDao.update(UInteger.valueOf(id),params);
     }
 
 
     @Override
     public boolean updatePortrait(int id, String imgUrl) {
-        return staffDao.updateImgUrl(id, imgUrl);
+        return staffDao.updateImgUrl(UInteger.valueOf(id), imgUrl);
     }
 
     @Override
     public StaffDTO findOne(int id) {
         Staff staff = staffDao.findById(UInteger.valueOf(id));
-        StaffDTO staffDto = mapperFactory.getMapperFacade().map(staff, StaffDTO.class);
+        StaffDTO staffDto = BeanUtil.map(staff, StaffDTO.class);
         return staffDto;
     }
 
 
     @Override
-    public PageStaffDTO findByConditions(ConditionsDTO conditionsDto, int offset, int size) {
-        PageStaffDTO pageStaffDTO = new PageStaffDTO();
+    public PageStaffDTO findByConditions(int offset,
+                                         int size,
+                                         ConditionsDTO conditionsDto) {
         List<Condition> conditions = new ArrayList<>();
         try {
             conditions = createConditions(conditionsDto);
@@ -112,22 +116,17 @@ public class StaffServiceImpl implements StaffService {
             e.printStackTrace();
         }
         List<Staff> staffList = staffDao.findStaffByConditions(offset, size, conditions.toArray(new Condition[conditions.size()]));
-        List<StaffDTO> staffDtoList = mapperFactory.getMapperFacade().mapAsList(staffList, StaffDTO.class);
+        List<StaffDTO> staffDtoList = BeanUtil.mapAsList(staffList, StaffDTO.class);
         int count = staffDao.count(conditions);
-        pageStaffDTO.setTotal(count);
-        pageStaffDTO.setStaffDtoList(staffDtoList);
-        return pageStaffDTO;
+        return new PageStaffDTO(count, staffDtoList);
     }
 
     @Override
     public PageStaffDTO getStaffList(int offset, int size) {
         List<Staff> staffList = staffDao.findAll(offset, size);
-        List<StaffDTO> staffDtoList = mapperFactory.getMapperFacade().mapAsList(staffList, StaffDTO.class);
+        List<StaffDTO> staffDtoList = BeanUtil.mapAsList(staffList, StaffDTO.class);
         int count = staffDao.count(Arrays.asList(STAFF.ENABLED.eq((byte) 1)));
-        PageStaffDTO pageStaffDTO = new PageStaffDTO();
-        pageStaffDTO.setTotal(count);
-        pageStaffDTO.setStaffDtoList(staffDtoList);
-        return pageStaffDTO;
+        return new PageStaffDTO(count,staffDtoList);
     }
 
     /**
@@ -160,8 +159,8 @@ public class StaffServiceImpl implements StaffService {
                 conditions.add(((TableField) staffField.get(STAFF)).le(field.get(conditionsDto)));
                 continue;
             }
-            Field field3 = com.ccbcfx.learn.tables.Staff.class.getField(fieldName);
-            conditions.add(((TableField) field3.get(STAFF)).eq(field.get(conditionsDto)));
+            Field staffField = com.ccbcfx.learn.tables.Staff.class.getField(fieldName);
+            conditions.add(((TableField) staffField.get(STAFF)).eq(field.get(conditionsDto)));
         }
         return conditions;
     }
