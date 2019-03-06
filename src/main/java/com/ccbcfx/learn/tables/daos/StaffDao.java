@@ -58,7 +58,7 @@ public class StaffDao {
      * @param id
      * @return
      */
-    @CacheEvict(key = "#p0")
+    @CacheEvict(key = "#p0.toString()")
     public boolean delete(UInteger id, int deleteBy) {
         int result = dslContext.update(STAFF)
                 .set(STAFF.ENABLED, (byte) 0)
@@ -74,7 +74,7 @@ public class StaffDao {
      * @param id
      * @return
      */
-    @Cacheable(key = "#p0.intValue()")
+    @Cacheable(key = "#p0.toString()")
     public Staff findById(UInteger id) {
         Field<?>[] fields =
                 {STAFF.ID,
@@ -131,7 +131,7 @@ public class StaffDao {
      * @param status
      * @return
      */
-    @CacheEvict(key = "#p0.intValue()")
+    @CacheEvict(key = "#p0.toString()")
     public boolean updateStatus(UInteger id, StaffStatusType status) {
         int result = dslContext.update(STAFF)
                 .set(STAFF.STATUS, status)
@@ -145,7 +145,7 @@ public class StaffDao {
      *
      * @return
      */
-    @CacheEvict(key = "#p0.intValue()")
+    @CacheEvict(key = "#p0.toString()")
     public boolean update( UInteger id,Map<? extends Field<?>, ?> map) {
         int result = dslContext.update(STAFF).set(map)
                 .where(STAFF.ID.eq(id))
@@ -160,7 +160,7 @@ public class StaffDao {
      * @param imgUrl
      * @return
      */
-    @CacheEvict(key = "#p0.intValue()")
+    @CacheEvict(key = "#p0.toString()")
     public boolean updateImgUrl(UInteger id, String imgUrl) {
         int result = dslContext.update(STAFF)
                 .set(STAFF.IMG_URL, imgUrl)
