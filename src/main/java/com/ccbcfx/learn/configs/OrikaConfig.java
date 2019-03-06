@@ -25,6 +25,9 @@ public class OrikaConfig {
         return mapperFactory;
     }
 
+    /**
+     * 实现jooq UInteger和Integer相互转换
+     */
     private static class UIntegerConverter
             extends BidirectionalConverter<UInteger, Integer> {
 
